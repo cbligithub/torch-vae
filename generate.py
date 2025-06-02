@@ -21,10 +21,10 @@ def generate(
     outdir,
 ):
     # Image size
-    img_size = (64, 64)
+    img_size = (48, 64)
 
     # Load the model
-    vae = model.VAE(num_latent_dims, num_img_channels, max_num_filters, device=device)
+    vae = model.VAE(img_size, num_latent_dims, num_img_channels, max_num_filters, device=device)
     vae.load(model_fname)
     print(f"Loaded model with {num_latent_dims} latent dims from {model_fname}")
 
@@ -55,6 +55,8 @@ def generate(
                 pics = torch.cat((pics, img), dim=0)
 
             # get img data
+            cimg = img.detach().cpu().numpy()
+            # print(cimg.dtype, cimg.shape, cimg.min(), cimg.max())
             img_data = (img.detach().cpu().numpy() * 255).astype(np.uint8).squeeze(0)
 
             # save the image

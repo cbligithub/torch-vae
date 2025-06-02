@@ -24,7 +24,7 @@ def reconstruct(
     batch_size = 32
 
     # Image size
-    img_size = (64, 64)
+    img_size = (48, 64)
 
     # get the data
     train_loader, test_loader, _, num_img_channels = dataset.get_loaders(
@@ -39,7 +39,7 @@ def reconstruct(
         suffix = "train"
 
     # Load the model
-    vae = model.VAE(num_latent_dims, num_img_channels, max_num_filters, device=device)
+    vae = model.VAE(img_size, num_latent_dims, num_img_channels, max_num_filters, device=device)
     vae.load(model_fname)
     print(f"Loaded model with {num_latent_dims} latent dims from {model_fname}")
 
@@ -107,9 +107,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--dataset",
         type=str,
-        choices=["mnist", "fashion-mnist", "cifar-10", "cifar-100", "celeb-a"],
+        choices=["mnist", "fashion-mnist", "cifar-10", "cifar-100", "celeb-a", "hand"],
         default="mnist",
-        help="Select the dataset to use (mnist, fashion-mnist, cifar-10, cifar-100, celeb-a)",
+        help="Select the dataset to use (mnist, fashion-mnist, cifar-10, cifar-100, celeb-a, hand)",
     )
     parser.add_argument(
         "--latent_dims",

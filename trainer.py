@@ -193,6 +193,8 @@ class Trainer:
 
             # forward pass of the batch
             outputs = self.model(images)
+            # print('input: ', images.type(), images.max(), images.min(), images.shape)
+            # print('output: ', outputs.type(), outputs.max(), outputs.min(), outputs.shape)
 
             # loss computation at the output of the network
             loss = self.loss_fn(images, outputs, self.model.kl_div)

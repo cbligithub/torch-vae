@@ -29,7 +29,7 @@ def train(
     max_num_filters,
 ):
     # Image size
-    img_size = (64, 64)
+    img_size = (48*1, 64*1)
 
     # get the data
     train_loader, _, _, num_img_channels = dataset.get_loaders(
@@ -37,7 +37,7 @@ def train(
     )
 
     # Instantiate the VAE
-    vae = model.VAE(num_latent_dims, num_img_channels, max_num_filters, device=device)
+    vae = model.VAE(img_size, num_latent_dims, num_img_channels, max_num_filters, device=device)
 
     # print summary and correctly flush the stream
     model_stats = summary(
@@ -87,7 +87,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--dataset",
         type=str,
-        choices=["mnist", "fashion-mnist", "cifar-10", "cifar-100", "celeb-a"],
+        choices=["mnist", "fashion-mnist", "cifar-10", "cifar-100", "celeb-a", "hand"],
         default="mnist",
         help="Select the dataset to use (mnist, fashion-mnist, cifar-10, cifar-100, celeb-a)",
     )

@@ -23,7 +23,7 @@ class Encoder(nn.Module):
     between the two distributions as this auxiliary loss.
     """
 
-    def __init__(self, num_latent_dims, num_img_channels, max_num_filters, device):
+    def __init__(self, input_shape, num_latent_dims, num_img_channels, max_num_filters, device):
         super().__init__()
         self.num_latent_dims = num_latent_dims
         self.num_img_channels = num_img_channels
@@ -34,7 +34,7 @@ class Encoder(nn.Module):
         # Todo: add input shape attribute to the model to make it more flexible
 
         # C x H x W
-        img_input_shape = (num_img_channels, 64, 64)
+        img_input_shape = (num_img_channels, input_shape[0], input_shape[1])
 
         # layers (with max_num_filters=128)
 
@@ -115,7 +115,7 @@ class Encoder(nn.Module):
 class Decoder(nn.Module):
     """A convolutional decoder"""
 
-    def __init__(self, num_latent_dims, num_img_channels, max_num_filters):
+    def __init__(self, output_shape, num_latent_dims, num_img_channels, max_num_filters):
         super().__init__()
         self.num_latent_dims = num_latent_dims
         self.num_img_channels = num_img_channels
@@ -133,7 +133,7 @@ class Decoder(nn.Module):
         # print(f"  num_filters_3={num_filters_3}")
 
         # C x H x W
-        img_output_shape = (num_img_channels, 64, 64)
+        img_output_shape = (num_img_channels, output_shape[0], output_shape[1])
 
         # divide the last two dimensions by 8 because of the 3 strided convolutions
         self.input_shape = [num_filters_1] + [
@@ -182,16 +182,14 @@ class Decoder(nn.Module):
 class VAE(nn.Module):
     """A convolutional Variational Autoencoder"""
 
-    def __init__(self, num_latent_dims, num_img_channels, max_num_filters, device):
+    def __init__(self, input_shape, num_latent_dims, num_img_channels, max_num_filters, device):
         super().__init__()
         self.num_latent_dims = num_latent_dims
         self.num_img_channels = num_img_channels
         self.max_num_filters = max_num_filters
         self.device = device
-        self.encoder = Encoder(
-            num_latent_dims, num_img_channels, max_num_filters, device
-        )
-        self.decoder = Decoder(num_latent_dims, num_img_channels, max_num_filters)
+        self.encoder = Encoder(input_shape, num_latent_dims, num_img_channels, max_num_filters, device)
+        self.decoder = Decoder(input_shape, num_latent_dims, num_img_channels, max_num_filters)
         self.kl_div = 0
 
     # forward pass of the data "x"
